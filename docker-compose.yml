@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:15-alpine
+    container_name: stayease_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: stayease_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  # --- Thêm pgAdmin vào đây ---
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: stayease_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+  # ----------------------------
+volumes:
+  pgdata:
+    # Volume này giúp dữ liệu không bị mất đi khi bạn tắt Docker

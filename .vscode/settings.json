@@ -1,0 +1,15 @@
+{
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "Stayease Local DB",
+            "database": "stayease_db",
+            "username": "admin",
+            "password": "password123"
+        }
+    ]
+}

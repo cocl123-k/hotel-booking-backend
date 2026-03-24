@@ -2,7 +2,7 @@ import { Controller, Post, Body, Patch, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { RegisterPartnerDto } from './dto/register-partner.dto';

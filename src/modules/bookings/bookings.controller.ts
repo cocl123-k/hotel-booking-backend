@@ -4,10 +4,10 @@ import { BookingsService } from './bookings.service';
 import { BookingStatus } from './bookings.entity';
 import { UpdateBookingStatusDto } from './dto/update-booking-status.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { Roles } from 'src/common/decorators/roles.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { UserRole } from '../users/users.entity';
 import { CreateBookingDto } from './dto/create-booking.dto';
-import { RolesGuard } from 'src/common/guards/roles.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
 
 @Controller('api/bookings')
 export class BookingsController {

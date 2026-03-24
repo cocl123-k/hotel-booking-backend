@@ -18,16 +18,14 @@ export class SeedService implements OnApplicationBootstrap {
     @InjectRepository(Inventory) private invRepo: Repository<Inventory>,
   ) {}
 
-  // Hàm này tự chạy khi App Start
   async onApplicationBootstrap() {
     console.log('🌱 Seed: Đang thiết lập lại dữ liệu...');
     await this.resetDatabase();
     await this.createData();
-    console.log('✅ Seed: Hoàn tất! Bạn có thể test API ngay bây giờ.');
+    console.log('Seed: Hoàn tất! Bạn có thể test API ngay bây giờ.');
   }
 
   private async resetDatabase() {
-    // Xóa theo thứ tự để tránh lỗi Foreign Key
     await this.dataSource.query('TRUNCATE TABLE "bookings" CASCADE');
     await this.dataSource.query('TRUNCATE TABLE "inventories" CASCADE');
     await this.dataSource.query('TRUNCATE TABLE "room_types" CASCADE');
@@ -36,26 +34,31 @@ export class SeedService implements OnApplicationBootstrap {
   }
 
   private async createData() {
-    const password = await bcrypt.hash('123456', 10);
+    const password = await bcrypt.hash('Abc@123456', 10);
 
-    // 1. Tạo Admin
+    const testUser = await this.userRepo.save({
+      email: 'user1@gmail.com',
+      passwordHash: password,
+      fullName: 'Người Dùng Test',
+      role: UserRole.GUEST,
+    });
+
+
     const admin = await this.userRepo.save({
-      email: 'admin@stayease.com',
+      email: 'admin@gmail.com',
       passwordHash: password,
       fullName: 'System Admin',
       role: UserRole.ADMIN,
     });
 
-    // 2. Tạo Partner
     const partner = await this.userRepo.save({
-      email: 'partner@stayease.com',
+      email: 'partner@gmail.com',
       passwordHash: password,
       fullName: 'Chủ Khách Sạn A',
       role: UserRole.PARTNER,
       partnerStatus: PartnerStatus.APPROVED,
     });
 
-    // 3. Tạo Khách hàng (Guest)
     const guest = await this.userRepo.save({
       email: 'guest@gmail.com',
       passwordHash: password,
@@ -63,7 +66,6 @@ export class SeedService implements OnApplicationBootstrap {
       role: UserRole.GUEST,
     });
 
-    // 4. Tạo Khách sạn (Trạng thái ACTIVE để tìm kiếm được ngay)
     const hotel = await this.hotelRepo.save({
       name: 'StayEase Luxury Resort',
       address: '123 Đường Biển',
@@ -74,7 +76,6 @@ export class SeedService implements OnApplicationBootstrap {
       partner: partner,
     });
 
-    // 5. Tạo Hạng phòng
     const roomType = await this.roomRepo.save({
       name: 'Phòng Deluxe Suite',
       bedType: '1 Giường Đôi Large',
@@ -84,7 +85,6 @@ export class SeedService implements OnApplicationBootstrap {
       hotel: hotel,
     });
 
-    // 6. Tạo Quỹ phòng (Inventory) cho 30 ngày tới
     const inventories: Inventory[] = [];
     const today = new Date();
     for (let i = 0; i < 30; i++) {
@@ -94,16 +94,17 @@ export class SeedService implements OnApplicationBootstrap {
       inventories.push(this.invRepo.create({
         roomType: roomType,
         date: date,
-        allottedCount: 10, // Có 10 phòng mỗi ngày
+        allottedCount: 10,
         bookedCount: 0,
         price: 1500000,
       }));
     }
     await this.invRepo.save(inventories);
 
-    console.log('📊 Tài khoản test:');
-    console.log('- Admin: admin@stayease.com / 123456');
-    console.log('- Partner: partner@stayease.com / 123456');
-    console.log('- Guest: guest@gmail.com / 123456');
+    console.log('Tài khoản test:');
+    console.log('- User: user1@gmail.com / Abc@123456');
+    console.log('- Admin: admin@gmail.com / Abc@123456');
+    console.log('- Partner: partner@gmail.com / Abc@123456');
+    console.log('- Guest: guest@gmail.com / Abc@123456');
   }
 }
